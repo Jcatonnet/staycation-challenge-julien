@@ -1,5 +1,0 @@
-Flask
-flask-cors
-records
-psycopg2-binary
-stringcase
