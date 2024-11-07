@@ -1,7 +1,9 @@
-.app {
+@import '../styles/variables';
 
-}
+.app {}
 
 .app__body {
-
+    display: flex;
+    justify-content: center;
+    padding: $spacing-md;
 }

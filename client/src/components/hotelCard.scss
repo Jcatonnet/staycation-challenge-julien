@@ -1,0 +1,65 @@
+@import '../styles/colors';
+@import '../styles/variables';
+
+.hotel-card {
+    border-radius: $border-radius-sm;
+    overflow: hidden;
+    width: 100%;
+
+    &__image {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin-bottom: $spacing-sm;
+    }
+
+    &__info {
+        margin-top: $spacing-sm;
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: $spacing-xs;
+    }
+
+    &__name {
+        font-weight: bold;
+        margin: 0;
+        color: $text;
+    }
+
+    &__reviews {
+        color: $text-light;
+    }
+
+    &__preview {
+        color: $text;
+        margin-bottom: $spacing-xs ;
+    }
+
+    &__price-section {
+        display: flex;
+        align-items: center;
+        gap: $spacing-sm;
+    }
+
+    &__price {
+        font-weight: bold;
+        color: $text;
+    }
+
+    &__old-price {
+        color: $text-light;
+        text-decoration: line-through;
+    }
+
+    &__discount {
+        background-color: $primary;
+        font-weight: bold;
+        color: white;
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $border-radius-sm;
+    }
+}

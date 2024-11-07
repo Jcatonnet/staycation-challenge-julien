@@ -1,0 +1,13 @@
+@import '../styles/variables';
+
+.hotelList__grid {
+    display: grid;
+    max-width: 80%;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: $spacing-md;
+    padding: $spacing-md;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+}
