@@ -1,6 +1,6 @@
 import React from 'react';
 import './hotelCard.scss';
-import { formatNumberOneDecimal } from '../../helpers/formatter'
+import { formatNumberOneDecimal, calculateDiscount } from '../../helpers/formatter'
 
 const HotelCard = ({ hotel }) => {
     return (
@@ -13,11 +13,11 @@ const HotelCard = ({ hotel }) => {
                     </span>
                     <span className="hotel-card__reviews">{formatNumberOneDecimal(hotel.average_score)}({hotel.review_count})</span>
                 </div>
-                <p className="hotel-card__preview">{hotel.preview}</p>
+                <span className="hotel-card__preview">{hotel.preview}</span>
                 <div className="hotel-card__price-section">
-                    <span className="hotel-card__price">Price €</span>
-                    <span className="hotel-card__old-price">Old price €</span>
-                    <span className="hotel-card__discount">-Discount %</span>
+                    <span className="hotel-card__price">{hotel.discount_price}€</span>
+                    <span className="hotel-card__old-price">{hotel.price}€</span>
+                    <span className="hotel-card__discount">{-calculateDiscount(hotel.price, hotel.discount_price)}%</span>
                 </div>
             </div>
         </div>
