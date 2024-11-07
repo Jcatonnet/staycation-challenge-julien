@@ -1,5 +1,7 @@
 @import "colors";
-@import "../components/HotelCard";
+@import "../components/HotelCard/HotelCard";
+@import "../components/HotelList/HotelList";
+
 
 body {
   margin: 0;

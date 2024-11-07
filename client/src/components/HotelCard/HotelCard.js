@@ -1,9 +1,8 @@
 import React from 'react';
 import './hotelCard.scss';
-import { formatNumberOneDecimal } from '../helpers/formatter'
+import { formatNumberOneDecimal } from '../../helpers/formatter'
 
 const HotelCard = ({ hotel }) => {
-    console.log(hotel)
     return (
         <div className="hotel-card">
             <img src={hotel.picture_id} alt={`${hotel.name} preview`} className="hotel-card__image" />

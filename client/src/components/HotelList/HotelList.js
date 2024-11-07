@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { fetchHotels } from '../api/services/hotelService.js';
-import HotelCard from './HotelCard';
+import { fetchHotels } from '../../api/services/hotelService.js';
+import HotelCard from '../HotelCard/HotelCard.js';
 import './hotelList.scss'
 
 const HotelList = () => {

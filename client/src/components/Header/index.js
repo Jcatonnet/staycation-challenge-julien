@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import fetch from 'isomorphic-fetch'
 
-import 'styles/header.scss'
+import './header.scss'
 
 import StaycationLogo from './StaycationLogo'
 
@@ -19,12 +19,14 @@ const Header = () => {
 
   return (
     <div className='header'>
-      <StaycationLogo />
-      {user && (
-        <div className='header__user'>
-                    Welcome, {user.firstName}!
-        </div>
-      )}
+      <div className='header__wrapper'>
+        <StaycationLogo />
+        {user && (
+          <div className='header__user'>
+            Welcome, {user.firstName}!
+          </div>
+        )}
+      </div>
     </div>
   )
 }
