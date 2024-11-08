@@ -1,0 +1,18 @@
+@import "styles/colors";
+@import "styles/variables";
+
+.hotel-info {
+    display: flex;
+    flex-direction: column;
+
+    &__name {
+        font-weight: bold;
+        margin: 0;
+        color: $text;
+    }
+
+    &__preview {
+        color: $text;
+        margin-top: $spacing-xs;
+    }
+}

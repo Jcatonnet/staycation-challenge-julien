@@ -1,0 +1,35 @@
+@import "styles/colors";
+@import "styles/variables";
+
+.hotel-pricing {
+    margin-top: $spacing-sm;
+
+    &__price-section {
+        display: flex;
+        align-items: center;
+        gap: $spacing-sm;
+    }
+
+    &__price {
+        font-weight: bold;
+        color: $text;
+
+        &--unavailable {
+            color: $text-light;
+        }
+    }
+
+    &__old-price {
+        color: $text-light;
+        text-decoration: line-through;
+    }
+
+    &__discount {
+        background-color: $primary;
+        font-size: $font-size-sm;
+        font-weight: bold;
+        color: white;
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $border-radius-sm;
+    }
+}
