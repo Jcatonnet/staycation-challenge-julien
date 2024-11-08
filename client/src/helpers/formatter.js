@@ -5,8 +5,6 @@ export const formatNumberOneDecimal = (number) => {
 
 export function calculateDiscount(originalPrice, discountPrice) {
     if (!originalPrice || !discountPrice || originalPrice <= discountPrice) {
-        console.log(originalPrice, discountPrice)
-
         return "0";
     }
     const discountPercentage = ((originalPrice - discountPrice) / originalPrice) * 100;

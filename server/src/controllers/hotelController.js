@@ -1,4 +1,4 @@
-import { getAllHotels, getAllHotelsWithAvailibity } from '../services/hotelService.js';
+import { getAllHotels, getAllHotelsWithAvailability } from '../services/hotelService.js';
 
 export const getHotels = async (req, res) => {
     try {
@@ -11,9 +11,9 @@ export const getHotels = async (req, res) => {
 };
 
 
-export const getHotelsWithAvailibility = async (req, res) => {
+export const getHotelsWithAvailability = async (req, res) => {
     try {
-        const hotelsWithAvailibility = await getAllHotelsWithAvailibity()
+        const hotelsWithAvailibility = await getAllHotelsWithAvailability()
         res.json(hotelsWithAvailibility)
     } catch (error) {
         console.error('Error fetching hotels:', error);
