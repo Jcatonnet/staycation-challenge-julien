@@ -11,61 +11,85 @@ export const getAllHotels = async () => {
   return rows;
 };
 
-
-const querySelectLastSaleId = `
-  SELECT id, start_date, end_date
-  FROM public.sale_dates
-  ORDER BY id DESC
-  LIMIT 1
-`;
-
 export const getAllHotelsWithAvailability = async () => {
   const query = `
-    WITH last_sale_period AS (
-      ${querySelectLastSaleId}
-    ),
-    bookings_within_sale AS (
-      SELECT room_id, COUNT(*) AS total_booked
-      FROM public.bookings
-      WHERE date >= (SELECT start_date FROM last_sale_period)
-        AND date <= (SELECT end_date FROM last_sale_period)
-      GROUP BY room_id
-    )
-    SELECT DISTINCT ON (hotels.id)
-      hotels.*,
-      rooms.hotel_id,
-      openings.date AS last_available_date,
-      openings.stock,
-      COALESCE(openings.stock - COALESCE(bookings_within_sale.total_booked, 0), openings.stock) AS remaining_stock,
-      openings.price,
-      openings.discount_price,
-      reviews.review_count,
-      reviews.average_score
-    FROM public.openings AS openings
-    JOIN (
-        SELECT room_id, MIN(price) AS min_price, MIN(discount_price) AS min_discount_price
-        FROM public.openings
-        WHERE sale_id = (SELECT id FROM last_sale_period) 
-          AND stock > 0
-        GROUP BY room_id
-    ) AS min_prices 
-      ON openings.room_id = min_prices.room_id 
-      AND openings.price = min_prices.min_price 
-      AND openings.discount_price = min_prices.min_discount_price
-    JOIN public.rooms AS rooms 
-      ON openings.room_id = rooms.id
-    JOIN public.hotels AS hotels 
-      ON rooms.hotel_id = hotels.id
-    LEFT JOIN (
-        SELECT hotel_id, COUNT(id) AS review_count, AVG(score) AS average_score
-        FROM public.reviews
-        GROUP BY hotel_id
-    ) AS reviews 
-      ON hotels.id = reviews.hotel_id
-    LEFT JOIN bookings_within_sale
-      ON openings.room_id = bookings_within_sale.room_id
-    WHERE openings.sale_id = (SELECT id FROM last_sale_period)
-      AND COALESCE(openings.stock - COALESCE(bookings_within_sale.total_booked, 0), openings.stock) > 0;
+WITH last_sale_period AS (
+  SELECT id AS sale_id, start_date, end_date
+  FROM public.sale_dates
+  ORDER BY start_date DESC
+  LIMIT 1
+),
+adjusted_openings AS (
+  SELECT
+    openings.*,
+    openings.stock - COALESCE(COUNT(bookings.id), 0) AS remaining_stock
+  FROM
+    public.openings AS openings
+    LEFT JOIN public.bookings AS bookings
+      ON openings.room_id = bookings.room_id
+      AND openings.date = bookings.date
+  GROUP BY openings.id
+),
+available_packages AS (
+  SELECT DISTINCT ON (hotels.id)
+    hotels.id AS hotel_id,
+    openings.price,
+    openings.discount_price,
+    openings.date,
+    last_sale_period.sale_id,
+    TRUE AS is_available_now
+  FROM
+    public.hotels AS hotels
+    JOIN public.rooms AS rooms ON hotels.id = rooms.hotel_id
+    JOIN adjusted_openings AS openings ON rooms.id = openings.room_id
+    JOIN last_sale_period ON openings.sale_id = last_sale_period.sale_id
+  WHERE
+    openings.remaining_stock > 0
+  ORDER BY hotels.id, openings.discount_price ASC
+),
+unavailable_packages AS (
+  SELECT DISTINCT ON (hotels.id)
+    hotels.id AS hotel_id,
+    openings.price,
+    openings.discount_price,
+    openings.sale_id,
+    FALSE AS is_available_now
+  FROM
+    public.hotels AS hotels
+    JOIN public.rooms AS rooms ON hotels.id = rooms.hotel_id
+    JOIN adjusted_openings AS openings ON rooms.id = openings.room_id
+    CROSS JOIN last_sale_period
+  WHERE
+    openings.remaining_stock > 0
+    AND openings.sale_id != last_sale_period.sale_id
+  ORDER BY hotels.id, openings.sale_id DESC, openings.discount_price ASC
+)
+SELECT
+  hotels.*,
+  COALESCE(ap.price, up.price) AS price,
+  COALESCE(ap.discount_price, up.discount_price) AS discount_price,
+  COALESCE(ap.sale_id, up.sale_id) AS sale_id,
+  COALESCE(ap.is_available_now, up.is_available_now, FALSE) AS is_available_now,
+  reviews.review_count::INTEGER,
+  reviews.average_score
+FROM
+  public.hotels AS hotels
+  LEFT JOIN available_packages AS ap ON hotels.id = ap.hotel_id
+  LEFT JOIN unavailable_packages AS up ON hotels.id = up.hotel_id
+  LEFT JOIN (
+    SELECT
+      hotel_id,
+      COUNT(id) AS review_count,
+      AVG(score)::NUMERIC(4,1) AS average_score
+    FROM public.reviews
+    GROUP BY hotel_id
+  ) AS reviews ON hotels.id = reviews.hotel_id
+WHERE
+  ap.hotel_id IS NOT NULL OR up.hotel_id IS NOT NULL
+ORDER BY
+  is_available_now DESC,
+  discount_price ASC,
+  average_score DESC;
   `;
 
   const { rows } = await DB.query(query);
