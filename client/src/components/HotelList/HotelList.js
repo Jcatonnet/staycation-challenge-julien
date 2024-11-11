@@ -1,26 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { fetchHotels } from '../../api/services/hotelService.js';
-import HotelCard from '../HotelCard/HotelCard.js';
 import './hotelList.scss'
 
-const HotelList = () => {
-    const [hotels, setHotels] = useState([]);
+const HotelCard = React.lazy(() => import('../HotelCard/HotelCard.js'));
 
-    useEffect(() => {
-        const getHotels = async () => {
-            const data = await fetchHotels();
-            setHotels(data);
-        };
-        getHotels();
-    }, []);
+
+const HotelList = () => {
+    const { data: hotels = [], isLoading, isError } = useQuery({
+        queryKey: ['hotels'],
+        queryFn: fetchHotels,
+    });
+    if (isLoading) return <p>Nous chargeons les meilleurs offres pour vous...</p>;
+    if (isError) return <p>Une erreur est survenue, veuillez réessayer</p>;
 
     return (
         <div className="hotelList__grid">
-            {hotels.map((hotel) => (
-                <HotelCard key={hotel.id} hotel={hotel} />
-            ))}
+            {hotels.length > 0 ? (
+                <Suspense fallback={<p>Nous chargeons les meilleurs offres pour vous...</p>}>
+                    {hotels.map((hotel) => (
+                        <HotelCard key={hotel.id} hotel={hotel} />
+                    ))}
+                </Suspense>
+
+            ) : (
+                <p>Il n'y a pas d'offres disponibles pour le moment</p>
+            )}
         </div>
     );
 };
-
 export default HotelList;

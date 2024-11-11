@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 import './hotelCard.scss';
 import HotelImage from './CardComponents/HotelImage.js';
 import HotelInfo from './CardComponents/HotelInfo.js';
 import HotelReviews from './CardComponents/HotelReviews.js';
 import HotelPricing from './CardComponents/HotelPricing.js';
 
-const HotelCard = ({ hotel }) => (
+const HotelCard = memo(({ hotel }) => (
     <div className="hotel-card">
         <HotelImage pictureId={hotel.picture_id} name={hotel.name} />
         <div className="hotel-card__content">
@@ -28,6 +28,6 @@ const HotelCard = ({ hotel }) => (
             />
         </div>
     </div>
-);
+));
 
 export default HotelCard;

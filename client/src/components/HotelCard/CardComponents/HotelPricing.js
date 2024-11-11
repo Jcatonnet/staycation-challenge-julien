@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { calculateDiscount } from '../../../helpers/formatter';
 import "./HotelPrice.scss"
 
-const HotelPricing = ({ price, discountPrice, isAvailableNow }) => {
+const HotelPricing = memo(({ price, discountPrice, isAvailableNow }) => {
     const priceClassName = isAvailableNow
         ? 'hotel-pricing__price'
         : 'hotel-pricing__price hotel-pricing__price--unavailable';
@@ -20,6 +20,6 @@ const HotelPricing = ({ price, discountPrice, isAvailableNow }) => {
             {discount && <span className="hotel-pricing__discount">{discount}%</span>}
         </div>
     );
-};
+});
 
 export default HotelPricing;

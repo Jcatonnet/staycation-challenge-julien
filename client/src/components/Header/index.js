@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import fetch from 'isomorphic-fetch'
 
-import './header.scss'
+import './Header.scss'
 
 import StaycationLogo from './StaycationLogo'
 

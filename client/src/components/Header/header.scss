@@ -8,8 +8,9 @@
     width: 100%;
     top: 0;
     justify-content: center;
-    border-bottom: 1px solid $gray-border;
     background: #FFF;
+    box-shadow: $gray-border 0px 2px 8px 0px;
+    ;
 
     .header__wrapper {
         width: 80%;
