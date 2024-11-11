@@ -1,3 +1,114 @@
+## Julien Catonnet challenge solution
+
+Answer for (no code) How would you implement a caching strategy for this app?:
+- We would leverage React Query caching mechanism using staleTime to optimize data fetching. (RQ will serve cached data without refetching for a given time)
+- Coupled with query Invalidation to ensure that cached data remains consistent with the server by invalidating and refetching data when necessary 
+- We could also implement prefetchQuery to fetch data in advance, before a user clicks on a Hotel card for example
+- if the app is going to grow we could implement a better state/caching strategy in the backend using Redis. We would use the in-memory functionality to store data for better retrieval and avoid to query the databse repeatedly
+
+Project Overview
+The Staycation Homepage Clone aims to replicate the core functionalities of Staycation's package wall, allowing users to browse through various hotel packages. Each package card displays vital information such as the hotel's name, star rating, preview text, image, aggregated reviews, pricing details, and availability status.
+
+Features
+Data Fetching with React Query: Efficient data fetching and caching mechanisms to ensure optimal performance.
+Modular Component Design: Small, reusable components combined into smart parent components for maintainability.
+Dynamic Ordering: Packages are displayed based on availability, lowest price, and descending reviews.
+Responsive Design: Ensures the application is accessible and visually appealing on various screen sizes.
+Error Handling: Graceful handling of loading states and potential errors during data fetching.
+Comprehensive Testing: Utilizing React Testing Library to ensure component reliability and correctness.
+Technologies Used
+Frontend:
+React
+React Query (@tanstack/react-query)
+React Testing Library
+SCSS for styling
+Backend:
+PostgreSQL
+Node.js (assuming based on context, adjust if different)
+Other Tools:
+Docker for containerization
+Jest for testing
+MSW (Mock Service Worker) for API mocking in tests
+
+Design Decisions
+Backend: Single Comprehensive Query
+Choice:
+We opted to use a single comprehensive SQL query to fetch all necessary hotel data, including availability, pricing, and aggregated reviews. This approach ensures that all relevant information is retrieved in one database call, simplifying data management on the frontend.
+
+Reasons:
+Simplicity: Reduces the complexity of making multiple API calls from the frontend.
+Performance: Minimizes the number of database interactions, which can be more efficient especially with well-optimized queries.
+Data Consistency: Ensures that all related data is fetched simultaneously, preventing inconsistencies that might arise from separate queries.
+Real-World Consideration:
+In larger applications with more complex data relationships and higher scalability requirements, it would be prudent to split queries into reusable segments. This modular approach allows for better maintainability, caching strategies, and can improve performance by fetching only the necessary data when needed.
+
+Frontend: Modular Component Architecture
+Choice:
+The frontend is built using a modular architecture where small, reusable components (HotelImage, HotelInfo, HotelReviews, HotelPricing) are combined into a smart parent component (HotelCard). This design promotes reusability and separation of concerns.
+
+Reasons:
+Maintainability: Smaller components are easier to manage, update, and debug.
+Reusability: Components like HotelInfo and HotelReviews can be reused across different parts of the application or in other projects.
+Clarity: A clear separation between presentational and container components enhances code readability and organization.
+Data Ordering Strategy
+Choice:
+Hotel packages are ordered based on:
+
+Availability: Available packages are prioritized.
+Lowest Price: Within the available packages, those with the lowest discount prices are displayed first.
+Descending Reviews: Among packages with the same availability and price, those with higher average review scores are shown first.
+Reasons:
+User Experience: Users are more likely to be interested in available packages, especially those offering the best prices.
+Value Highlighting: Displaying higher-reviewed packages first builds trust and showcases quality.
+Logical Flow: This ordering ensures that users see the most relevant and valuable options upfront.
+Performance Optimizations
+1. React.memo
+Usage: Applied to the HotelCard component and potentially to its child components (HotelInfo, HotelReviews, etc.) to prevent unnecessary re-renders when props remain unchanged.
+Benefit: Enhances rendering performance, especially when dealing with large lists of hotel packages.
+2. Lazy Loading with React.lazy and Suspense
+Usage: Implemented lazy loading for the HotelCard component within the HotelList component to split code and reduce the initial bundle size.
+Benefit: Improves initial load times by loading heavy components only when needed.
+3. Efficient Styling
+Approach: Utilized SCSS for modular and maintainable styling, avoiding inline styles to leverage CSS optimizations and prevent unnecessary recalculations.
+
+Future Improvements
+While the current implementation meets the project requirements, there are several areas for potential enhancement:
+
+Enhanced Error Handling
+
+Implement more granular error messages based on different error types.
+Add retry mechanisms for failed API calls.
+Pagination or Infinite Scrolling
+
+Introduce pagination or infinite scrolling for better performance with large datasets.
+Virtualization of Hotel List
+
+Integrate virtualization libraries (react-window or react-virtualized) to efficiently render extensive hotel lists.
+Routing and Navigation
+
+Implement React Router for navigating between different pages or detailed views of hotels.
+User Authentication
+
+Add user authentication to handle bookings and user-specific data.
+Booking Functionality
+
+Develop booking features allowing users to reserve hotel packages.
+Accessibility Enhancements
+
+Ensure the application meets accessibility standards (ARIA roles, keyboard navigation, etc.).
+SEO Optimization
+
+Optimize the application for search engines to improve visibility.
+Unit and Integration Tests
+
+Expand the test suite to cover more components and integration flows.
+Backend Query Optimization
+
+Monitor and optimize the SQL query performance as the dataset grows.
+Consider splitting queries for better maintainability and scalability in a larger application context.
+
+
+
 # Staycation's Technical Test
 
 Welcome! This technical test aims to validate a few basic programming skills before we go further.

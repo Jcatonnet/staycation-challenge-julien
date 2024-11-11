@@ -5,11 +5,11 @@ import './hotelList.scss'
 
 const HotelCard = React.lazy(() => import('../HotelCard/HotelCard.js'));
 
-
 const HotelList = () => {
     const { data: hotels = [], isLoading, isError } = useQuery({
         queryKey: ['hotels'],
         queryFn: fetchHotels,
+        // staleTime: 1000 * 60 * 5, // we could leverage react Query using StaleTime to implement chaching mechanism and improve performance
     });
     if (isLoading) return <p>Nous chargeons les meilleurs offres pour vous...</p>;
     if (isError) return <p>Une erreur est survenue, veuillez réessayer</p>;
