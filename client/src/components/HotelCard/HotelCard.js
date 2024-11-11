@@ -6,7 +6,7 @@ import HotelReviews from './CardComponents/HotelReviews.js';
 import HotelPricing from './CardComponents/HotelPricing.js';
 
 const HotelCard = memo(({ hotel }) => (
-    <div className="hotel-card">
+    <div className="hotel-card" data-testid='hotel-card'>
         <HotelImage pictureId={hotel.picture_id} name={hotel.name} />
         <div className="hotel-card__content">
             <div className="hotel-card__header">
